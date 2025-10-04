@@ -1,10 +1,8 @@
 // Perfect 👍
-// I’ll create a **single Java file** version that has the **entire implementation + inline comments + explanation** (so you can copy-paste into one file and run directly).
+// I'll create a **single Java file** version that has the **entire implementation + inline comments + explanation** (so you can copy-paste into one file and run directly).
 
 // ---
-
 // # 📂 Folder Structure (for interviewer explanation)
-
 // ```
 // tic-tac-toe-LLD/
 // │── Main.java
@@ -23,20 +21,20 @@
 // │── game/
 // │   └── TicTacToe.java        (Game loop + controller)
 // ```
-
 // # ✅ Complete **One File Implementation**
-
 import java.util.*;
 
 // ======================= CONTROLLER (Singleton) =======================
 /**
- * GameController follows Singleton pattern
- * → ensures only one instance of controller exists across the game.
+ * GameController follows Singleton pattern → ensures only one instance of
+ * controller exists across the game.
  */
 class GameController {
+
     private static GameController instance;
 
-    private GameController() {} // private constructor prevents direct instantiation
+    private GameController() {
+    } // private constructor prevents direct instantiation
 
     public static GameController getInstance() {
         if (instance == null) {
@@ -48,10 +46,10 @@ class GameController {
 
 // ======================= MODEL CLASSES =======================
 /**
- * Abstract Player class
- * → base for Human or AI players
+ * Abstract Player class → base for Human or AI players
  */
 abstract class Player {
+
     protected char symbol; // X or O
 
     public char getSymbol() {
@@ -68,10 +66,10 @@ abstract class Player {
 }
 
 /**
- * HumanPlayer class
- * → Player controlled via console input
+ * HumanPlayer class → Player controlled via console input
  */
 class HumanPlayer extends Player {
+
     public HumanPlayer(char symbol) {
         this.symbol = symbol;
     }
@@ -88,21 +86,22 @@ class HumanPlayer extends Player {
 }
 
 /**
- * PlayerFactory
- * → Factory pattern to create players (can extend later for AIPlayer)
+ * PlayerFactory → Factory pattern to create players (can extend later for
+ * AIPlayer)
  */
 class PlayerFactory {
+
     public static Player createPlayer(char symbol) {
         return new HumanPlayer(symbol);
     }
 }
 
 /**
- * Board class
- * → Maintains 2D grid state
- * → Subject in Observer pattern (notifies players on changes)
+ * Board class → Maintains 2D grid state → Subject in Observer pattern (notifies
+ * players on changes)
  */
 class Board {
+
     private char[][] board;
     private List<Player> observers = new ArrayList<>();
 
@@ -141,7 +140,9 @@ class Board {
     public boolean isFull() {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board.length; j++) {
-                if (board[i][j] == '\0') return false;
+                if (board[i][j] == '\0') {
+                    return false;
+                }
             }
         }
         return true;
@@ -164,6 +165,7 @@ class Board {
  * MoveStrategy: Strategy pattern interface for validating moves
  */
 interface MoveStrategy {
+
     boolean isValidMove(Board board, int x, int y);
 }
 
@@ -171,14 +173,15 @@ interface MoveStrategy {
  * WinStrategy: Strategy pattern interface for win condition
  */
 interface WinStrategy {
+
     boolean checkWin(Board board, char symbol);
 }
 
 /**
- * Default move validation strategy:
- * → A move is valid only if the cell is empty
+ * Default move validation strategy: → A move is valid only if the cell is empty
  */
 class DefaultMoveStrategy implements MoveStrategy {
+
     @Override
     public boolean isValidMove(Board board, int x, int y) {
         return board.getCell(x, y) == '\0';
@@ -186,17 +189,19 @@ class DefaultMoveStrategy implements MoveStrategy {
 }
 
 /**
- * Default win condition strategy:
- * → checks rows, columns, diagonals
+ * Default win condition strategy: → checks rows, columns, diagonals
  */
 class DefaultWinStrategy implements WinStrategy {
+
     @Override
     public boolean checkWin(Board board, char symbol) {
         int size = board.getSize();
 
         // check rows & columns
         for (int i = 0; i < size; i++) {
-            if (checkRow(board, symbol, i) || checkCol(board, symbol, i)) return true;
+            if (checkRow(board, symbol, i) || checkCol(board, symbol, i)) {
+                return true;
+            }
         }
 
         // check diagonals
@@ -205,21 +210,27 @@ class DefaultWinStrategy implements WinStrategy {
 
     private boolean checkRow(Board board, char symbol, int row) {
         for (int i = 0; i < board.getSize(); i++) {
-            if (board.getCell(row, i) != symbol) return false;
+            if (board.getCell(row, i) != symbol) {
+                return false;
+            }
         }
         return true;
     }
 
     private boolean checkCol(Board board, char symbol, int col) {
         for (int i = 0; i < board.getSize(); i++) {
-            if (board.getCell(i, col) != symbol) return false;
+            if (board.getCell(i, col) != symbol) {
+                return false;
+            }
         }
         return true;
     }
 
     private boolean checkDiag(Board board, char symbol) {
         for (int i = 0; i < board.getSize(); i++) {
-            if (board.getCell(i, i) != symbol) return false;
+            if (board.getCell(i, i) != symbol) {
+                return false;
+            }
         }
         return true;
     }
@@ -227,7 +238,9 @@ class DefaultWinStrategy implements WinStrategy {
     private boolean checkAntiDiag(Board board, char symbol) {
         int size = board.getSize();
         for (int i = 0; i < size; i++) {
-            if (board.getCell(i, size - i - 1) != symbol) return false;
+            if (board.getCell(i, size - i - 1) != symbol) {
+                return false;
+            }
         }
         return true;
     }
@@ -235,11 +248,11 @@ class DefaultWinStrategy implements WinStrategy {
 
 // ======================= GAME LOOP =======================
 /**
- * TicTacToe class
- * → orchestrates the game
- * → holds board, players, and strategies
+ * TicTacToe class → orchestrates the game → holds board, players, and
+ * strategies
  */
 class TicTacToe {
+
     private Board board;
     private Player currentPlayer;
     private Player player1;
@@ -298,36 +311,28 @@ class TicTacToe {
 
 // ======================= MAIN =======================
 public class Main {
+
     public static void main(String[] args) {
         TicTacToe game = new TicTacToe();
         game.play();
     }
 }
-```
-
----
 
 // # 📖 How to Explain to Interviewer
-
 // * **Singleton** → `GameController` ensures only one controller instance.
 // * **Factory** → `PlayerFactory` creates players (easy to extend for AI).
 // * **Observer** → `Board` notifies players when updated.
 // * **Strategy** → Move & Win conditions are pluggable algorithms.
 // * **Separation of Concerns** →
-
 //   * `Board` manages state.
 //   * `Player` only makes moves.
 //   * `Strategy` checks rules.
 //   * `TicTacToe` runs the game loop.
-
 // This design shows **clean extensibility**:
-
 // * Can add **AIPlayer** by extending `Player`.
 // * Can change **WinStrategy** for 4x4 Tic Tac Toe.
 // * Can support **networked multiplayer** without touching Board/Strategy.
-
 // ---
-
 // 👉 Now you can just **copy-paste this single file** into your IDE as `Main.java` and run directly.
 
 // Would you like me to also **annotate a one-page cheatsheet** (bullet points only, no code) that you can read quickly right before the interview?
